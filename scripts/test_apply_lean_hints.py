@@ -68,6 +68,19 @@ class Reading(unittest.TestCase):
         self.assertEqual([(e.file, e.line, e.column, e.old, e.new, e.kind, e.name) for e in found],
                          [("src/A.lean", 84, 24, "if_neg", "ite_eq_right", "deprecated", "if_neg"),
                           ("src/A.lean", 3, 2, "haveI", "have", HAVEILETI, None)])
+        self.assertEqual([e.successor for e in found], ["ite_eq_right", None])
+
+    def test_a_root_prefix_before_the_successor_is_dropped(self):
+        # Lean writes `_root_.` before a name that would be ambiguous where it is printed.
+        log = ["warning: src/A.lean:9:4: `ContinuousLinearMap.add_apply` has been deprecated: Use `_root_.add_apply` instead",
+               "", "Hint: Replace the deprecated name:", "  " + struck("ContinuousLinearMap.") + "add_apply"]
+        self.assertEqual([(e.name, e.successor, e.old, e.new) for e in hints.edits(log)],
+                         [("ContinuousLinearMap.add_apply", "add_apply", "ContinuousLinearMap.add_apply", "add_apply")])
+
+    def test_a_deprecation_with_a_text_of_its_own_names_no_successor(self):
+        self.assertIsNone(hints.DEPRECATED.match("`a` has been deprecated: see the notes")["successor"])
+        self.assertIsNone(hints.DEPRECATED.match("`a` has been deprecated: Use `b` or `c` instead")["successor"])
+        self.assertEqual(hints.DEPRECATED.match("`a` has been deprecated: Use `b.c'` instead")["successor"], "b.c'")
 
     def test_try_this_with_the_edit_on_the_same_line_is_read(self):
         log = ["warning: src/A.lean:3:2: Try this: haveI" + S, "",
@@ -275,7 +288,18 @@ class Applying(unittest.TestCase):
 
     def edit(self, line, column, old, new, kind="deprecated", file="src/A.lean", name="a_theorem"):
         """An edit; a deprecation is of a name that reads like a theorem unless `name` says otherwise."""
-        return hints.Edit(file, line, column, old, new, kind, name if kind == "deprecated" else None)
+        if kind != "deprecated":
+            return hints.Edit(file, line, column, old, new, kind)
+        return hints.Edit(file, line, column, old, new, kind, name, "its.successor")
+
+    @staticmethod
+    def told(**kinds):
+        """What the kind check would say: name="kind" or name="kind/arguments"; dots in names are written `__`."""
+        lines = []
+        for name, word in kinds.items():
+            kind, _, arguments = word.partition("/")
+            lines.append(f"KIND\t{name.replace('__', '.')}\t{kind}\tits.successor\t{arguments or 'same'}")
+        return hints.read_kinds(lines)
 
     def place(self, text, old, new, occurrence=1, kind="deprecated", name="a_theorem"):
         """An edit of the `occurrence`-th `old` in `text`."""
@@ -394,18 +418,46 @@ class Applying(unittest.TestCase):
         self.assertEqual(self.read("src/A.lean"), "theorem t : x := by\n  rw [Pi.monoidHom, ite_eq_right h, Measurable.enorm]\n")
         self.assertEqual(outcome, {"deprecated": {"made": 1, "does not read like a theorem": 2, "reported twice": 1}})
         # With Lean's word, the theorem without an underscore is replaced too, and nothing else.
-        told = hints.read_kinds(["KIND\tPi.monoidHom\tdefinition\r\n", "KIND\tif_neg\ttheorem\n", "KIND\tMeasurable.enorm\ttheorem", "noise"])
+        told = self.told(Pi__monoidHom="definition", if_neg="theorem", Measurable__enorm="theorem")
         outcome, _, _ = self.run_on(text, offered, kinds=told)
         self.assertEqual(self.read("src/A.lean"), "theorem t : x := by\n  rw [Pi.monoidHom, ite_eq_right h, Measurable.enorm']\n")
         self.assertEqual(outcome, {"deprecated": {"made": 2, "not a theorem": 1, "reported twice": 1}})
-        # A name Lean was not asked about is not replaced.
-        outcome, _, _ = self.run_on(text, offered, kinds={"if_neg": "theorem"})
+        # A name Lean was not asked about is not replaced, and neither is one it does not know.
+        outcome, _, _ = self.run_on(text, offered, kinds=self.told(if_neg="theorem"))
         self.assertEqual(outcome, {"deprecated": {"made": 1, "not in the kinds file": 2, "reported twice": 1}})
-        outcome, _, _ = self.run_on(text, offered, kinds={"if_neg": "theorem", "Pi.monoidHom": "missing"})
+        outcome, _, _ = self.run_on(text, offered, kinds=self.told(if_neg="theorem", Pi__monoidHom="missing"))
         self.assertEqual(outcome, {"deprecated": {"made": 1, "not a constant the kind check found": 1,
                                                   "not in the kinds file": 1, "reported twice": 1}})
+        # The answer belongs to the pair: for another successor of the same name it does not count.
+        other = hints.read_kinds(["KIND\tif_neg\ttheorem\tsome.other.successor\tsame"])
+        outcome, _, _ = self.run_on(text, offered, kinds=other)
+        self.assertEqual(outcome, {"deprecated": {"not in the kinds file": 3, "reported twice": 1}})
         outcome, _, _ = self.run_on(text, offered, definitions=True)
         self.assertEqual(outcome, {"deprecated": {"made": 3, "reported twice": 1}})
+        outcome, _, _ = self.run_on(text, offered, definitions=True, kinds=told)
+        self.assertEqual(outcome, {"deprecated": {"made": 3, "reported twice": 1}})
+
+    def test_a_name_whose_successor_is_said_to_take_other_arguments_is_left_alone(self):
+        text = "theorem t : x := by\n  exact le_trans (Nat.add_div_le_add_div _ _ _) (foo_bar h) (if_neg k) Pi.algHom\n"
+        offered = [self.place(text, "Nat.add_div_le_add_div", "Nat.div_add_div_le_add_div", name="Nat.add_div_le_add_div"),
+                   self.place(text, "foo_bar", "foo_baz", name="foo_bar"), self.place(text, "if_neg", "ite_eq_right", name="if_neg"),
+                   self.place(text, "Pi.algHom", "AlgHom.pi", name="Pi.algHom")]
+        told = self.told(Nat__add_div_le_add_div="theorem/other", if_neg="theorem", foo_bar="theorem/unknown",
+                         Pi__algHom="definition/other")
+        outcome, _, _ = self.run_on(text, offered, kinds=told)
+        self.assertEqual(self.read("src/A.lean"), text.replace("if_neg", "ite_eq_right"))
+        self.assertEqual(outcome, {"deprecated": {"made": 1, "its successor takes its arguments differently": 1,
+                                                  "its successor is not a constant the kind check found": 1, "not a theorem": 1}})
+        # Asking for definitions as well does not switch this off.
+        outcome, _, _ = self.run_on(text, offered, kinds=told, definitions=True)
+        self.assertEqual(self.read("src/A.lean"), text.replace("if_neg", "ite_eq_right"))
+        self.assertEqual(outcome, {"deprecated": {"made": 1, "its successor takes its arguments differently": 2,
+                                                  "its successor is not a constant the kind check found": 1}})
+
+    def test_lines_of_the_kind_check_are_read_in_their_present_form_only(self):
+        told = hints.read_kinds(["KIND\tif_neg\ttheorem\tite_eq_right\tsame\r\n", "KIND\tPi.algHom\tdefinition\tAlgHom.pi\tother",
+                                 "KIND\tif_pos\ttheorem", "KIND\tfoo\ttheorem\tbar\tperhaps", "noise"])
+        self.assertEqual(told, {("if_neg", "ite_eq_right"): ("theorem", "same"), ("Pi.algHom", "AlgHom.pi"): ("definition", "other")})
 
     def test_line_endings_and_the_end_of_the_file_stay_byte_for_byte(self):
         text = "theorem t : x := by\r\n  rw [if_neg h]\r\n  done"
@@ -605,10 +657,10 @@ class Running(unittest.TestCase):
         check = self.root / "Kinds.lean"
         done = self.run_script("--write-kind-check", str(check))
         self.assertEqual(done.returncode, 0, done.stderr.decode())
-        self.assertIn('"if_neg"]', check.read_text(encoding="utf-8"))
+        self.assertIn('("if_neg", "ite_eq_right")]', check.read_text(encoding="utf-8"))
         self.assertIn("import Mathlib", check.read_text(encoding="utf-8"))
         self.assertEqual(self.source(), self.SOURCE)
-        (self.root / "kinds.txt").write_text("KIND\tif_neg\tdefinition\n", encoding="utf-8")
+        (self.root / "kinds.txt").write_text("KIND\tif_neg\tdefinition\tite_eq_right\tsame\n", encoding="utf-8")
         done = self.run_script("--kinds", str(self.root / "kinds.txt"))
         self.assertIn("deprecated: 0 edits (2 not a theorem)", done.stdout.decode())
         self.assertEqual(self.source(), self.SOURCE.replace("haveI", "have"))
@@ -629,9 +681,10 @@ class Running(unittest.TestCase):
         self.assertEqual((self.root / "src/B.lean").read_text(encoding="utf-8"), after)
 
     def test_names_are_written_into_the_kind_check_as_lean_strings(self):
-        text = hints.kind_check({'a"b', "c\\d", "Foo.bar", "NAMES"})
-        for quoted in ('"a\\"b"', '"c\\\\d"', '"Foo.bar"', '"NAMES"'):
+        text = hints.kind_check({('a"b', "c\\d"), ("Foo.bar", "PAIRS"), ("no.successor", "")})
+        for quoted in ('("a\\"b", "c\\\\d")', '("Foo.bar", "PAIRS")', '("no.successor", "")'):
             self.assertIn(quoted, text)
+        self.assertEqual(text.count("applyLeanHintsArguments a.type == applyLeanHintsArguments b.type"), 1)
 
     def test_a_missing_log_or_kinds_file_is_an_error_of_the_call(self):
         self.assertEqual(self.run_script(log=str(self.root / "none.log")).returncode, 2)
@@ -640,10 +693,19 @@ class Running(unittest.TestCase):
         self.assertEqual(self.source(), self.SOURCE)
 
     def test_a_kinds_file_without_the_checks_output_is_refused(self):
-        (self.root / "kinds.txt").write_text("error: unknown package 'Mathlib'\n", encoding="utf-8")
+        for text in ("error: unknown package 'Mathlib'\n", "KIND\tif_neg\ttheorem\n"):  # the second: an earlier form
+            with self.subTest(text=text):
+                (self.root / "kinds.txt").write_text(text, encoding="utf-8")
+                done = self.run_script("--kinds", str(self.root / "kinds.txt"))
+                self.assertEqual(done.returncode, 2)
+                self.assertEqual(self.source(), self.SOURCE)
+
+    def test_a_run_without_kinds_says_what_it_cannot_see(self):
+        self.assertIn("without --kinds", self.run_script().stderr.decode())
+        (self.root / "kinds.txt").write_text("KIND\tif_neg\ttheorem\tite_eq_right\tsame\n", encoding="utf-8")
         done = self.run_script("--kinds", str(self.root / "kinds.txt"))
-        self.assertEqual(done.returncode, 2)
-        self.assertEqual(self.source(), self.SOURCE)
+        self.assertNotIn("without --kinds", done.stderr.decode())
+        self.assertIn("rw [ite_eq_right h]", self.source())
 
     def test_a_log_of_another_tree_ends_with_an_error_code(self):
         (self.root / "src/A.lean").write_text("theorem t : x := by\n  rfl\n", encoding="utf-8")

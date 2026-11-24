@@ -16,15 +16,24 @@ This script reads a log of `lake build` and makes such edits at the reported lin
 after checking that the text to be replaced stands there. Without `--kind` it makes the two
 kinds it was written for and checked on: deprecated names, and `haveI`/`letI`.
 
-Which names it replaces. Only deprecated theorems, unless `--definitions` is given. A theorem
-and its replacement of the same type are interchangeable in a proof. A definition is not: the
-proof then names one constant and the statement another, and a `rw` that compiled stops
-matching. Whether a name is a theorem is taken from Lean when `--kinds FILE` is given (the
-output of the file that `--write-kind-check` writes, run with `lake env lean`; it
-imports Mathlib only, so a name declared elsewhere comes back as missing and is left alone).
-Without it the name has to read like a theorem: an underscore in its last part, as in `if_neg` and unlike
-`Pi.monoidHom`. In the log this was written for, that rule called no definition a theorem and
-left 42 of 758 theorems alone.
+Which names it replaces. Only deprecated theorems, unless `--definitions` is given. Inside a
+proof a theorem can be exchanged for another of the same type when the two take their arguments
+in the same way. A definition cannot: the proof then names one constant and the statement
+another, and a `rw` that compiled stops matching. Lean offers the edit when the two types are
+equal after unfolding reducible definitions, and they are equal also when an explicit argument
+has become implicit: `Nat.add_div_le_add_div _ _ _` stops compiling under its new name.
+
+What a name is, and how it and its successor take their arguments, is taken from Lean when
+`--kinds FILE` is given (the output of the file that `--write-kind-check` writes, run with
+`lake env lean`). That file compares, for every `∀` in the two types, whether the argument is
+explicit, implicit or an instance and whether it has a default value or tactic, and a name
+whose successor differs there is left alone. It does not compare the names of arguments: a use
+with a named argument, or a `case` or `induction … with` that names a goal after one, can stop
+compiling. It imports Mathlib only, so a name declared elsewhere comes back as missing and is
+left alone. Without `--kinds` none of this is seen, and the name has to read like a theorem:
+an underscore in its last part, as in `if_neg` and unlike `Pi.monoidHom`. In the log this was
+written for, that rule called none of 37 definitions a theorem and left 36 of 599 theorems
+alone.
 
 Where it edits. Only inside the proof of a `theorem` or `lemma`, unless `--everywhere` is given.
 In a statement, or in the body of a definition or an instance, a file can still compile and say
@@ -78,7 +87,7 @@ UNREADABLE = "�"
 WARNING = re.compile(r"^warning: (?P<file>.+?\.lean):(?P<line>\d+):(?P<column>\d+): (?P<text>.*)$")
 # A line of build progress or of another message ends the warning before it.
 OTHER = re.compile(r"^(?:[⚠✔✖ℹ] \[\d+/\d+\]|info: |error: |warning: |Build completed|Some required)")
-DEPRECATED = re.compile(r"^`(?P<name>[^`]+)` has been deprecated")
+DEPRECATED = re.compile(r"^`(?P<name>[^`]+)` has been deprecated(?:: Use `(?P<successor>[^`]+)` instead)?")
 LINTER = re.compile(r"set_option (linter\.[A-Za-z0-9_.]+) false")
 # The kinds applied when none is asked for.
 KINDS = ("deprecated", "linter.style.haveILetI")
@@ -103,20 +112,44 @@ OPENING, CLOSING = "([{⟨", ")]}⟩"
 # A `:=` after one of these, outside brackets, belongs to it and not to the theorem.
 BINDS = ("let", "have", "haveI", "letI")
 
-# A line of the kind check's output: the word KIND, the name, and what Lean says it is.
-KIND = re.compile(r"^KIND\t(?P<name>[^\t]+)\t(?P<kind>\w+)$")
+# A line of the kind check's output: the word KIND, the name, what Lean says it is, its successor,
+# and whether the two take their arguments in the same way.
+KIND = re.compile(r"^KIND\t(?P<name>[^\t]+)\t(?P<kind>\w+)\t(?P<successor>[^\t]*)\t(?P<arguments>same|other|unknown)$")
 KIND_CHECK = '''import Mathlib
 
 /-! Written by scripts/apply-lean-hints.py --write-kind-check. Run it with `lake env lean` and
-give the output to `--kinds`: it says for each deprecated name of a build log what it is. -/
+give the output to `--kinds`. For each deprecated name of a build log it says what the name is,
+and whether its successor takes its arguments in the same way. -/
+
+open Lean in
+/-- For every `∀` in a type, in order: how the argument is taken (explicit, implicit, strict
+implicit, instance), and whether it has a default value or a default tactic. -/
+partial def applyLeanHintsArguments (e : Expr) (found : Array Nat := #[]) : Array Nat :=
+  match e with
+  | .forallE _ domain body info =>
+    let how := match info with
+      | .default => 0
+      | .implicit => 1
+      | .strictImplicit => 2
+      | .instImplicit => 3
+    let how := how + (if domain.isOptParam then 4 else 0) + (if domain.isAutoParam then 8 else 0)
+    applyLeanHintsArguments body (applyLeanHintsArguments domain (found.push how))
+  | .lam _ domain body _ => applyLeanHintsArguments body (applyLeanHintsArguments domain found)
+  | .letE _ type value body _ =>
+    applyLeanHintsArguments body (applyLeanHintsArguments value (applyLeanHintsArguments type found))
+  | .app f a => applyLeanHintsArguments a (applyLeanHintsArguments f found)
+  | .mdata _ inner => applyLeanHintsArguments inner found
+  | .proj _ _ inner => applyLeanHintsArguments inner found
+  | _ => found
 
 open Lean in
 #eval show CoreM Unit from do
-  let names : List String := [
-  NAMES]
+  let pairs : List (String × String) := [
+  PAIRS]
   let env ← getEnv
-  for text in names do
-    let kind := match env.find? text.toName with
+  for (old, new) in pairs do
+    let was := env.find? old.toName
+    let kind := match was with
       | some (.thmInfo _) => "theorem"
       | some (.defnInfo _) => "definition"
       | some (.inductInfo _) => "inductive"
@@ -126,16 +159,21 @@ open Lean in
       | some (.recInfo _) => "recursor"
       | some (.quotInfo _) => "quot"
       | none => "missing"
-    IO.println s!"KIND\\t{text}\\t{kind}"
+    let arguments := match was, env.find? new.toName with
+      | some a, some b =>
+        if applyLeanHintsArguments a.type == applyLeanHintsArguments b.type then "same" else "other"
+      | _, _ => "unknown"
+    IO.println s!"KIND\\t{old}\\t{kind}\\t{new}\\t{arguments}"
 '''
 
 
 class Edit:
-    def __init__(self, file, line, column, old, new, kind, name=None):
+    def __init__(self, file, line, column, old, new, kind, name=None, successor=None):
         self.file, self.line, self.column = os.path.normpath(file), line, column
         self.old, self.new = old, new
         self.kind = kind  # "deprecated", or the linter's option name
         self.name = name  # the deprecated name, when there is one
+        self.successor = successor  # the full name Lean gives as its replacement, when it gives one
 
     def key(self):
         return (self.file, self.line, self.column, self.old, self.new)
@@ -230,34 +268,57 @@ def edits(lines, skipped=None):
         deprecated = DEPRECATED.match(text)
         linter = LINTER.search("\n".join(rest))
         kind = "deprecated" if deprecated else (linter.group(1) if linter else "other")
-        yield Edit(file, line, column, pair[0], pair[1], kind, deprecated["name"] if deprecated else None)
+        if deprecated:
+            # Lean writes `_root_.` before a name that would be ambiguous where it is printed.
+            successor = (deprecated["successor"] or "").removeprefix("_root_.")
+            yield Edit(file, line, column, pair[0], pair[1], kind, deprecated["name"], successor)
+        else:
+            yield Edit(file, line, column, pair[0], pair[1], kind)
 
 
 # ---------------------------------------------------------------------------------------------
 # Which names, and where in a file.
 
 
-def is_theorem(name, kinds):
-    """Whether a deprecated name is a theorem: by Lean's word in `kinds`, else by how the name reads."""
-    if kinds is not None:
-        return kinds.get(name) == "theorem"
-    return "_" in name.rsplit(".", 1)[-1]
+def refusal(edit, kinds, definitions):
+    """Why a deprecated name is not replaced, or None when it is.
+
+    `kinds` is what the kind check said, or None; then the name alone decides.
+    """
+    if kinds is None:
+        if definitions or "_" in edit.name.rsplit(".", 1)[-1]:
+            return None
+        return "does not read like a theorem"
+    told = kinds.get((edit.name, edit.successor or ""))
+    if told is None:
+        return "not in the kinds file"
+    kind, arguments = told
+    if kind == "missing":
+        return "not a constant the kind check found"
+    if kind != "theorem" and not definitions:
+        return "not a theorem"
+    if arguments == "other":
+        return "its successor takes its arguments differently"
+    if arguments == "unknown":
+        return "its successor is not a constant the kind check found"
+    return None
 
 
 def read_kinds(lines):
-    """What a run of the kind check says, as {name: kind}."""
+    """What a run of the kind check says, as {(name, successor): (kind, arguments)}."""
     found = {}
     for line in lines:
         match = KIND.match(line.rstrip("\r\n"))
         if match:
-            found[match["name"]] = match["kind"]
+            found[match["name"], match["successor"]] = (match["kind"], match["arguments"])
     return found
 
 
-def kind_check(names):
-    """A Lean file that prints the kind of each of `names`."""
-    quoted = ",\n  ".join('"' + name.replace("\\", "\\\\").replace('"', '\\"') + '"' for name in sorted(names))
-    return KIND_CHECK.replace("NAMES", quoted)
+def kind_check(pairs):
+    """A Lean file that prints what each deprecated name is. `pairs` are (name, its successor)."""
+    def quoted(text):
+        return '"' + text.replace("\\", "\\\\").replace('"', '\\"') + '"'
+    return KIND_CHECK.replace("PAIRS", ",\n  ".join(f"({quoted(old)}, {quoted(new)})" for old, new in sorted(pairs)))
 
 
 def plain(text):
@@ -402,26 +463,19 @@ def apply(root, offered, *, others=(), write=True, everywhere=False, within="src
 
     `others` are edits of the same log that are not to be made now. If one of them is in the
     text already, it has shifted its line, and that has to be known to find the rest.
-    `kinds` is Lean's word on which deprecated names are theorems; without it the name decides.
-    With `definitions` a deprecated name is replaced whatever it is.
+    `kinds` is what the kind check said about the deprecated names; without it the name decides.
+    With `definitions` a deprecated name that is no theorem is replaced too.
     """
     outcome = collections.defaultdict(collections.Counter)
     by_file = collections.defaultdict(dict)  # {file: {key: (edit, whether it is to be made)}}
     for edit in offered:
+        reason = None if edit.name is None else refusal(edit, kinds, definitions)
         if edit.key() in by_file[edit.file]:
             outcome[edit.kind]["reported twice"] += 1
-        elif edit.name is None or definitions or is_theorem(edit.name, kinds):
+        elif reason is None:
             by_file[edit.file][edit.key()] = (edit, True)
         else:
             by_file[edit.file][edit.key()] = (edit, False)
-            if kinds is None:
-                reason = "does not read like a theorem"
-            elif edit.name not in kinds:
-                reason = "not in the kinds file"
-            elif kinds[edit.name] == "missing":
-                reason = "not a constant the kind check found"
-            else:
-                reason = "not a theorem"
             outcome[edit.kind][reason] += 1
     for edit in others:
         by_file[edit.file].setdefault(edit.key(), (edit, False))
@@ -533,13 +587,14 @@ def main():
         print(f"the log cannot be read: {error}", file=sys.stderr)
         return 2
     if args.write_kind_check:
-        names = {edit.name for edit in found if edit.name}
+        names = {(edit.name, edit.successor or "") for edit in found if edit.name}
         try:
             Path(args.write_kind_check).write_text(kind_check(names), encoding="utf-8")
         except OSError as error:
             print(f"the kind check cannot be written: {error}", file=sys.stderr)
             return 2
-        print(f"{len(names)} names written to {args.write_kind_check}; run it with `lake env lean` and pass the output to --kinds")
+        print(f"{len(names)} names with their successors written to {args.write_kind_check}; "
+              "run it with `lake env lean` and pass the output to --kinds")
         return 0
     told = None
     if args.kinds:
@@ -550,7 +605,8 @@ def main():
             print(f"the kinds file cannot be read: {error}", file=sys.stderr)
             return 2
         if not told:
-            print(f"{args.kinds} holds no line of the kind check's output", file=sys.stderr)
+            print(f"{args.kinds} holds no line of the kind check's output (lines of an earlier form, "
+                  "without the successor, do not count: write and run the kind check again)", file=sys.stderr)
             return 2
     for edit in found:
         if edit.kind not in kinds:
@@ -577,6 +633,8 @@ def main():
         for (kind, old, new), count in sorted(pairs.items(), key=lambda item: (-item[1], item[0])):
             print(f"{count:>7}  {old} -> {new}  [{kind}]")
     print(f"{len(changed)} files " + ("would change" if args.dry_run else "changed"))
+    if told is None and not args.definitions and outcome.get("deprecated"):
+        print("note: without --kinds a successor that takes its arguments differently is not seen", file=sys.stderr)
     if stale:
         print(f"{stale} edits did not find their text: the log is not of this tree", file=sys.stderr)
     if strange:

@@ -1,47 +1,41 @@
 #!/usr/bin/env python3
-"""Check which axioms the judged theorems depend on, from the artifacts of a build.
+"""Check which axioms the judged theorems depend on, after a build.
 
 `comparator.json` names the theorems and the axioms they may depend on. This script has Lean
 list, for each of those theorems, every axiom its proof depends on. It ends with 1 when a
 theorem does not exist, is no theorem, or depends on an axiom outside the list. A `sorry`
-anywhere below a theorem shows up as the axiom `sorryAx`. It elaborates one small file that
-imports the solution module. It builds nothing.
+anywhere below a theorem shows up as the axiom `sorryAx`. It builds nothing.
 
-Two ways to run it:
+It runs Lake twice:
 
-  check-axioms.py --project DIR --build-map MAP --build-log LOG --build-receipt FILE --receipt OUT
-      After scripts/run-complete-build.py. The build's receipt has to bind the checked-out
-      inputs, the log and the map, by the test scripts/stage-completed-build.py applies, and
-      the module traces in the build directory have to cover the map. The theorems and the
-      allowed axioms are read from the commit, not from the working tree. The registered
-      toolchain's `lake` and `lean` are used, in the build's trusted environment.
+    lake build --no-build +<solution module>
+        has to end with 0: for that module and all it imports, Lake then finds the recorded
+        input hashes equal to the ones of the sources in the tree.
+    lake env lean <a small file>
+        The file imports the solution module and prints the axioms.
 
-  check-axioms.py --project DIR --unbound [--receipt OUT]
-      On any tree whose solution module is built, for a contributor's own check. It runs the
-      `lake` and `lean` it finds, in the caller's environment, and its receipt says that no
-      completed build stands behind it.
-
-In both, `lake build --no-build` of the solution module runs first and has to end with 0: for
-that module and all it imports, Lake then finds the recorded input hashes equal to the ones of
-the sources in the tree. After a completed build the sources are hashed again for this
-(`--rehash`). The artifacts themselves are not hashed against the build's map; staging does
-that for the archives it publishes.
+Importing the solution module runs the `initialize` blocks of the tree, so the second command
+runs code of the tree, and both belong where the build ran. After a pull request's build that
+is the build's sandbox. `check()` therefore does not run Lake itself: it is given a function
+that does, and the caller decides where and under which limits. It writes the small file to a
+place the caller names, and makes the verdict from what the two commands print. Run as a
+script, this uses the `lake` it finds, for a contributor's own tree.
 
 What this is not: a second check of the proofs. In this version of Lean the axioms of a theorem
 are recorded in its module's artifact when the module is built, and this script reads that
 record. Code of the tree that runs during the build, or when the solution is imported, could
-tamper with the record or with this run. The check finds a `sorry` or an axiom that someone
-left in; it is no defence against a tree written to deceive it. Nor does it look at what a
-theorem states. Comparator and its kernels replay the proofs and compare the statements.
+tamper with the record or print an answer of its own. The check finds a `sorry` or an axiom
+that someone left in; it is no defence against a tree written to deceive it. Nor does it look
+at what a theorem states. Comparator and its kernels replay the proofs and compare the
+statements.
 
 Exit code: 0 when every theorem depends on allowed axioms only; 1 when one does not, does not
-exist or is no theorem; 2 when the check could not be made (inputs, build state, Lean's answer).
+exist or is no theorem; 2 when the check could not be made (comparator.json, the build's state,
+Lean's answer).
 """
 from __future__ import annotations
 
 import argparse
-import hashlib
-import importlib.util
 import json
 from pathlib import Path
 import re
@@ -85,20 +79,10 @@ open Lean in
         ++ found.foldl (fun line a => line ++ "\\t" ++ checkAxiomsHex (toString a)) "")
   IO.println ("TOKEN\\tEND\\t" ++ toString names.length)
 '''
-# The artifacts of a module that hold its declarations.
-OLEANS = (".olean", ".olean.server", ".olean.private")
 
 
-class Unusable(Exception):
+class Unusable(ValueError):
     """The check could not be made."""
-
-
-def sha256(path):
-    digest = hashlib.sha256()
-    with open(path, "rb") as stream:
-        for block in iter(lambda: stream.read(1 << 20), b""):
-            digest.update(block)
-    return digest.hexdigest()
 
 
 def judged(data, where="comparator.json"):
@@ -147,8 +131,7 @@ def read(output, names, token):
                 axioms = [bytes.fromhex(item).decode("utf-8") for item in coded]
             except ValueError:
                 raise Unusable(f"Lean's answer for `{name}` holds a name that cannot be read") from None
-            if (name in found or not count.isdigit() or int(count) != len(axioms) or not all(axioms)
-                    or len(set(axioms)) != len(axioms)):
+            if name in found or count != str(len(axioms)) or not all(axioms) or len(set(axioms)) != len(axioms):
                 raise Unusable(f"Lean's answer for `{name}` is not usable")
             found[name], kinds[name] = sorted(axioms), kind
         elif word == "MISSING" and len(fields) == 1 and fields[0] not in found:
@@ -179,190 +162,70 @@ def problems(found, kinds, permitted):
     return lines
 
 
-def run(command, cwd, env):
-    """Run a command; its exit code and what it printed, standard error included."""
-    try:
-        done = subprocess.run(command, cwd=cwd, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-    except OSError as error:
-        raise Unusable(f"{command[0]} could not be started: {error}") from None
-    return done.returncode, done.stdout.decode("utf-8", "replace")
+def through(command, *, cwd=None, env=None):
+    """A function for `check()`: it runs `command`, a list, with the arguments it is given behind it."""
+    def lake(arguments):
+        try:
+            done = subprocess.run([*command, *arguments], cwd=cwd, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        except OSError as error:
+            raise Unusable(f"{command[0]} could not be started: {error}") from None
+        return done.returncode, done.stdout.decode("utf-8", "replace")
+    return lake
 
 
-def artifacts(project, solution):
-    """Checksums of the solution module's own artifacts in the build directory."""
-    relative = Path(*solution.split("."))
-    for other in sorted((project / ".lake/packages").glob("*/.lake/build/lib/lean")):
-        if any((other / relative.parent / (relative.name + suffix)).exists() for suffix in OLEANS):
-            raise Unusable(f"a dependency's build directory holds a module `{solution}` too, and Lean would load that one: {other}")
-    directory = project / ".lake/build/lib/lean" / relative.parent
-    files = [directory / (relative.name + suffix) for suffix in OLEANS]
-    files = [path for path in files if path.exists() or path.is_symlink()]
-    if not files or files[0].name != relative.name + ".olean":
-        raise Unusable(f"no artifact of `{solution}` under {directory}")
-    for path in files:
-        if path.is_symlink() or not path.is_file():
-            raise Unusable(f"an artifact of `{solution}` is no regular file: {path}")
-    return {path.name: sha256(path) for path in files}
+def check(config, lake, source, seen_as=None):
+    """The axioms of the theorems that `config` names, with the verdict under `passed`.
 
+    `config`: the bytes of a `comparator.json`. The caller chooses whose. For a pull request
+        that is the base branch's: the pull request's own could permit more.
+    `lake`: a function that runs Lake with the arguments it is given, a list, and returns the
+        exit code and what was printed, standard error included. On one's own tree that is
+        `through(["lake"], cwd=project)`. After a pull request's build it runs the build's
+        sandbox command with the path of `lake` inside it and Lake's own options (`--packages`,
+        `--rehash`) behind it, under the build's limits on memory and time.
+    `source`: where the Lean file is written. `seen_as`: the path under which the Lean process
+        finds that file, when the sandbox shows it elsewhere.
 
-def collect(project, lake, lean, env, solution, names):
-    """Lean's answer for `names` and the artifacts it came from, after Lake has confirmed that the solution module is built."""
+    Raises Unusable (a ValueError) when the check cannot be made.
+    """
+    solution, names, permitted = judged(config)
     # `+` names the module. A bare name would be taken for a library or an executable of that name first.
-    code, output = run([*lake, "build", "--no-build", "+" + solution], project, env)
+    code, output = lake(["build", "--no-build", "+" + solution])
     if code:
         raise Unusable(f"`lake build --no-build +{solution}` ended with {code}: the solution module is not built "
                        f"for the sources in this tree\n{output[-2000:]}")
-    before = artifacts(project, solution)
     token = "check-axioms-" + secrets.token_hex(16)
-    with tempfile.TemporaryDirectory(prefix="check-axioms-") as work:
-        source = Path(work) / "CheckAxioms.lean"
-        source.write_text(lean_source(solution, names, token), encoding="utf-8")
-        code, output = run([lake[0], "env", lean, str(source)], project, env)
+    try:
+        Path(source).write_text(lean_source(solution, names, token), encoding="utf-8")
+    except OSError as error:
+        raise Unusable(f"the Lean file that lists the axioms could not be written: {error}") from None
+    code, output = lake(["env", "lean", str(seen_as or source)])
     if code:
         raise Unusable(f"Lean ended with {code} on the file that lists the axioms\n{output[-2000:]}")
     found, kinds = read(output, names, token)
-    if artifacts(project, solution) != before:
-        raise Unusable("the solution module's artifacts changed while the check ran")
-    return found, kinds, before
-
-
-def repository_modules():
-    """The repository's own build script and its complete-build script, as modules."""
-    here = Path(__file__)
-    spec = importlib.util.spec_from_file_location("completed_ci_build", here.with_name("ci-build.py"))
-    ci = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(ci)
-    spec = importlib.util.spec_from_file_location("stock_complete_build", here.with_name("run-complete-build.py"))
-    complete = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(complete)
-    return ci, complete
-
-
-def bound(args):
-    """Check that the completed build's receipt binds this tree, as staging does.
-
-    Returns what goes into the receipt, the bytes of the commit's `comparator.json`, the
-    commands and the environment to use, and a function that makes the same check again.
-    """
-    ci, complete = repository_modules()
-    selected = ci.settings.for_toolchain(args.release or ci.TOOLCHAIN)
-    ci.TOOLCHAIN, ci.settings = selected.TOOLCHAIN, selected
-    project = args.project.resolve()
-    log = ci.safe_file(args.build_log.parent.resolve(), args.build_log.name)
-    if not re.search(rb"Build completed successfully \([0-9]+ jobs\)\.", log.read_bytes()):
-        raise Unusable("the build log does not record successful completion")
-    mapping = ci.safe_file(args.build_map.parent.resolve(), args.build_map.name)
-    receipt_file = ci.safe_file(args.build_receipt.parent.resolve(), args.build_receipt.name)
-    receipt = json.loads(receipt_file.read_text())
-
-    def check():
-        current = complete.identity(project, selected)
-        complete.validate_receipt(receipt, current, selected, log, mapping)
-        # As in staging: every entry of the build's map is the input hash of a module built here.
-        entries = ci.load_map(mapping)
-        if not entries or {key for _, _, key in ci.module_traces(project) if key in entries} != set(entries):
-            raise Unusable("the module traces in the build directory do not cover the completed build's map")
-        return current
-
-    current = check()
-    env = {**ci.trusted_env(), "ELAN_TOOLCHAIN": selected.TOOLCHAIN, "LEAN_ABORT_ON_PANIC": "1"}
-    toolchain = args.toolchain
-    if toolchain is None:
-        toolchain = Path(subprocess.check_output(["elan", "which", "lean"], env=env, text=True).strip()).parent.parent
-    version = subprocess.check_output([str(toolchain / "bin/lean"), "--version"], env=env, text=True)
-    if not version.startswith(f"Lean (version {selected.VERSION},") or selected.COMMIT not in version:
-        raise Unusable("the check requires the exact registered stock toolchain")
-    config = subprocess.check_output(["git", "-C", str(project), "cat-file", "blob",
-                                      current["candidate_head"] + ":comparator.json"], env=env)
-    facts = {"bound_to_completed_build": True, "candidate_head": current["candidate_head"],
-             "candidate_tree": current["candidate_tree"], "toolchain": selected.TOOLCHAIN,
-             "toolchain_commit": selected.COMMIT, "lean_version": version.strip(),
-             "build_receipt_sha256": ci.sha256(receipt_file), "build_log_sha256": ci.sha256(log),
-             "map_sha256": ci.sha256(mapping)}
-    return facts, config, [str(toolchain / "bin/lake"), "--rehash"], str(toolchain / "bin/lean"), env, check
-
-
-def unbound(project):
-    """What can be said about a tree with no completed build behind it, and the bytes of its `comparator.json`."""
-    def said(*command):
-        try:
-            code, output = run(list(command), project, None)
-        except Unusable:
-            return None
-        return output.strip() if code == 0 else None
-
-    status = said("git", "status", "--porcelain", "--", "src", "lakefile.toml", "lake-manifest.json", "lean-toolchain",
-                  "comparator.json")
-    try:
-        config = (project / "comparator.json").read_bytes()
-    except OSError as error:
-        raise Unusable(f"comparator.json cannot be read: {error}") from None
-    facts = {"bound_to_completed_build": False, "candidate_head": said("git", "rev-parse", "HEAD"),
-             "inputs_committed": status == "", "lean_version": said("lean", "--version")}
-    return facts, config
+    wrong = problems(found, kinds, permitted)
+    return {"solution_module": solution, "permitted_axioms": sorted(permitted), "axioms": found, "kinds": kinds,
+            "problems": wrong, "passed": not wrong}
 
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("--project", type=Path, required=True, help="the checkout whose build is checked")
-    parser.add_argument("--build-map", type=Path, help="the completed build's -o map")
-    parser.add_argument("--build-log", type=Path, help="the completed build's log")
-    parser.add_argument("--build-receipt", type=Path, help="the receipt scripts/run-complete-build.py wrote")
-    parser.add_argument("--unbound", action="store_true",
-                        help="check a tree with no completed build behind it; the receipt says so")
-    parser.add_argument("--receipt", type=Path, help="where to write this check's receipt (required with a build receipt)")
-    parser.add_argument("--toolchain", type=Path, help="the stock toolchain's directory (with a build receipt)")
-    parser.add_argument("--release", help="the registered stock release (with a build receipt)")
-    args = parser.parse_args(argv)
-    build = (args.build_map, args.build_log, args.build_receipt)
-    if args.unbound and (any(build) or args.toolchain or args.release):
-        parser.error("--unbound stands alone: no build map, log or receipt, and no --toolchain or --release")
-    if not args.unbound and not all(build):
-        parser.error("give --build-map, --build-log and --build-receipt together, or --unbound alone")
-    if not args.unbound and args.receipt is None:
-        parser.error("with a build receipt, --receipt is required")
-    if args.receipt is not None and args.receipt.exists():
-        parser.error("use a fresh --receipt path, so that a stale result cannot be taken for this one")
-
-    project = args.project.resolve()
+    parser.add_argument("--project", type=Path, default=Path("."),
+                        help="the checkout whose build is checked, with its comparator.json (default: this directory)")
+    project = parser.parse_args(argv).project.resolve()
     try:
-        again = None
-        if args.unbound:
-            facts, config = unbound(project)
-            lake, lean, env = ["lake"], "lean", None
-        else:
-            try:
-                facts, config, lake, lean, env, again = bound(args)
-            except Unusable:
-                raise
-            except Exception as error:  # the repository's own checks raise ValueError and CalledProcessError
-                raise Unusable(f"the completed build's receipt does not stand for this tree: {error}") from None
-        solution, names, permitted = judged(config)
-        found, kinds, made = collect(project, lake, lean, env, solution, names)
-        if again is not None:
-            try:
-                again()
-            except Exception as error:
-                raise Unusable(f"the inputs changed while the check ran: {error}") from None
-        wrong = problems(found, kinds, permitted)
-        value = {"schema": 1, "kind": "axioms-of-judged-theorems", **facts,
-                 "comparator_sha256": hashlib.sha256(config).hexdigest(), "solution_module": solution,
-                 "solution_artifacts_sha256": made, "permitted_axioms": sorted(permitted),
-                 "axioms": found, "kinds": kinds, "problems": wrong, "passed": not wrong}
-        if args.receipt is not None:
-            args.receipt.parent.mkdir(parents=True, exist_ok=True)
-            args.receipt.write_text(json.dumps(value, sort_keys=True, indent=2) + "\n", encoding="utf-8")
+        config = (project / "comparator.json").read_bytes()
+        with tempfile.TemporaryDirectory(prefix="check-axioms-") as work:
+            record = check(config, through(["lake"], cwd=project), Path(work) / "CheckAxioms.lean")
     except (Unusable, OSError) as error:
         print(f"check-axioms: {error}", file=sys.stderr)
         return 2
-
-    for name, axioms in found.items():
+    for name, axioms in record["axioms"].items():
         print(f"{name}: " + ("does not exist" if axioms is None else ", ".join(axioms) if axioms else "no axioms"))
-    for line in wrong:
+    for line in record["problems"]:
         print(f"check-axioms: {line}", file=sys.stderr)
-    print(json.dumps({"axioms_checked": True, "passed": not wrong, "bound_to_completed_build": facts["bound_to_completed_build"],
-                      "candidate_head": facts["candidate_head"], "theorems": len(found)}), flush=True)
-    return 1 if wrong else 0
+    print(json.dumps({"axioms_checked": True, "passed": record["passed"], "theorems": len(record["axioms"])}), flush=True)
+    return 0 if record["passed"] else 1
 
 
 if __name__ == "__main__":

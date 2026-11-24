@@ -49,6 +49,12 @@ begin in the first column, and one proved by pattern matching whose first altern
 parser: an attribute with brackets inside it, for one, hides its theorem, which is then left
 alone.
 
+One more place is left alone: a `haveI` or `letI` with a placeholder (`_`, `?_`, `?m`) between
+the keyword and its `:=`. `have : T _ := by …` settles the type before it runs the tactic
+block, and where the placeholder was to be filled by that block, an instance can no longer be
+found: Lean's suggestion did not compile at such a place in a sample build. An argument that is
+left open without being written, an implicit one, is not seen.
+
 What it does not trust. A message in the log can be made to look like a warning about any
 file, so only regular files under `--within` (default `src`) inside `--root` are written, and
 no part of their path may be a symbolic link. A warning whose text is not at its place is
@@ -109,6 +115,12 @@ DECLARATION = re.compile(PREFIX.pattern + r"(?:theorem|lemma|def|instance|abbrev
 # with its `|` if it begins with one.
 PIECE = re.compile(r"\n[ \t]*\|?|=>|:=|[^\W\d][\w'!?]*|[()\[\]{}⟨⟩]")
 OPENING, CLOSING = "([{⟨", ")]}⟩"
+# The characters of a Lean name, as far as they matter beside an underscore. Fewer than Lean
+# allows is the safe side: an underscore beside any other character counts as a placeholder.
+# Of the Greek letters, λ, Π and Σ are no part of a name.
+NAME = "A-Za-z0-9_'α-κμ-ωΑ-ΟΡΤ-Ω₀-₉ₐ-ₜᵢ-ᵪ℀-⅏"
+# A placeholder: `_` by itself (also in `?_`), or a named hole `?m`.
+PLACEHOLDER = re.compile(rf"(?<![{NAME}])_(?![{NAME}])|(?<![{NAME}!?])\?[A-Za-z_α-κμ-ω]")
 # A `:=` after one of these, outside brackets, belongs to it and not to the theorem.
 BINDS = ("let", "have", "haveI", "letI")
 
@@ -420,6 +432,33 @@ def in_proof_of_theorem(bare, starts, flush, number, column):
     return proof
 
 
+def states_placeholder(bare, number, column):
+    """Whether a placeholder stands between this place and the `:=` that follows it.
+
+    `bare` are the lines without comments. The `:=` is the first one outside brackets that does
+    not belong to a `let` or `have` on the way. Ten lines are read, the rest of this one and nine
+    more; when they hold no such `:=`, the answer is yes.
+    """
+    text = "\n".join([bare[number - 1][column:]] + bare[number:number + 9])
+    depth = waiting = 0
+    for piece in PIECE.finditer(text):
+        word = piece.group()
+        if word in OPENING:
+            depth += 1
+        elif word in CLOSING:
+            depth = max(depth - 1, 0)
+        elif depth:
+            continue
+        elif word in BINDS:
+            waiting += 1
+        elif word == ":=":
+            if waiting:
+                waiting -= 1
+            else:
+                return bool(PLACEHOLDER.search(text, 0, piece.start()))
+    return True
+
+
 def allowed(root, file, within):
     """Whether `file`, as a log names it, is a regular file under `root`/`within` with no symbolic link on the way."""
     relative = Path(file)
@@ -496,7 +535,7 @@ def apply(root, offered, *, others=(), write=True, everywhere=False, within="src
                 outcome[edit.kind]["file is not one to write"] += 1
             continue
         lines = text.split("\n")
-        bare = [] if everywhere else plain(text).split("\n")
+        bare = plain(text).split("\n")
         starts, flush = ([], set()) if everywhere else commands(bare, lines)
         done = []
         by_line = collections.defaultdict(list)
@@ -531,6 +570,8 @@ def apply(root, offered, *, others=(), write=True, everywhere=False, within="src
                     outcome[edit.kind]["text is not there"] += 1
                 elif not everywhere and not in_proof_of_theorem(bare, starts, flush, number, at):
                     outcome[edit.kind]["outside the proof of a theorem, left alone"] += 1
+                elif edit.old in ("haveI", "letI") and states_placeholder(bare, number, at + len(edit.old)):
+                    outcome[edit.kind]["has a placeholder before its `:=`, left alone"] += 1
                 else:
                     pending.append((at, edit))
                     taken = at + len(edit.old)

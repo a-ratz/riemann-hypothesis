@@ -575,6 +575,43 @@ class Applying(unittest.TestCase):
         self.assertEqual(self.read("src/A.lean"), "theorem t : x := by\n  exact foo\n")
         self.assertEqual(outcome, {"linter.x": {"made": 1}})
 
+    LEFT = "has a placeholder before its `:=`, left alone"
+
+    def test_a_havei_with_a_placeholder_before_its_define_sign_is_left_alone(self):
+        cases = (("  haveI : Nontrivial (IndSp (points (Fin 2)) _) := by\n    exact foo", "haveI"),  # the case that did not compile
+                 ("  haveI : Foo (n := 1) bar := baz _", "have"),                 # a placeholder in the value only
+                 ("  haveI := qux _", "have"),                                     # no type stated
+                 ("  letI : Bar a\n      b := c", "let"),                          # the type goes on in the next line
+                 ("  letI : Bar a\n      (fun _ => b) := c", "letI"),              # ... and the placeholder stands there
+                 ("  haveI : Baz (x_1 : A) /- _ -/ h_ _root_.c := d", "have"),     # inside names, and in a comment
+                 ("  haveI : Open ?_ := e", "haveI"),
+                 ("  haveI : Open ?m := e", "haveI"),                              # a named hole
+                 ("  haveI : Foo (n := 1) _ := baz", "haveI"),                     # the first `:=` is inside brackets
+                 ("  haveI : let n := 2; Foo n _ := bar", "haveI"),                # ... or belongs to a `let`
+                 ("  haveI : IsClosed _ᶜ := e", "haveI"),                          # a sign that is no part of a name
+                 ("  haveI : Foo λ_ := e", "haveI"),                               # and λ is none either
+                 ("  haveI x₁_y : Foo α_ x? := e", "have"))                        # subscripts and other Greek letters are
+        text = "theorem t : x := by\n" + "\n".join(lines for lines, _ in cases) + "\n"
+        places = [(number, line.split()[0]) for number, line in enumerate(text.split("\n"), 1)
+                  if line.startswith(("  haveI", "  letI"))]
+        offered = [self.edit(number, 2, word, word[:-1], kind=HAVEILETI) for number, word in places]
+        expected = {"made": sum(word in ("have", "let") for _, word in cases), self.LEFT: sum(word in ("haveI", "letI") for _, word in cases)}
+        for options in ({}, {"everywhere": True}):  # the rule does not depend on where edits are allowed
+            with self.subTest(options=options):
+                outcome, _, _ = self.run_on(text, offered, **options)
+                after = self.read("src/A.lean").split("\n")
+                self.assertEqual([after[number - 1].split()[0] for number, _ in places], [word for _, word in cases])
+                self.assertEqual(outcome, {HAVEILETI: expected})
+
+    def test_ten_lines_are_read_for_the_define_sign(self):
+        within = "theorem t : x := by\n  haveI : Foo a\n" + "  simp\n" * 8 + "  obtain y := foo\n"
+        outcome, _, _ = self.run_on(within, [self.place(within, "haveI", "have", kind=HAVEILETI)])
+        self.assertEqual(outcome, {HAVEILETI: {"made": 1}})
+        # One line further it is out of sight, and what cannot be seen counts as a placeholder.
+        beyond = "theorem t : x := by\n  haveI : Foo a\n" + "  simp\n" * 9 + "  obtain y := foo\n"
+        outcome, _, _ = self.run_on(beyond, [self.place(beyond, "haveI", "have", kind=HAVEILETI)])
+        self.assertEqual(outcome, {HAVEILETI: {self.LEFT: 1}})
+
     def test_a_dry_run_changes_nothing(self):
         text = "theorem t : x := by\n  rw [if_neg h]\n"
         outcome, changed, _ = self.run_on(text, [self.edit(2, 6, "if_neg", "ite_eq_right")], write=False)

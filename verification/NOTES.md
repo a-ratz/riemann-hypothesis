@@ -95,15 +95,23 @@ A text search is not a proof. The axiom check and kernel replay in Comparator ar
 **Pull requests.** `risky-constructs.yml` runs
 [`scripts/risky-constructs.py`](../scripts/risky-constructs.py) on every pull request. It fails a
 pull request that adds, to a Lean file under `src/`, one of the constructs in the script's list:
-`sorry`, the `stop` tactic, `admit`, a declared axiom, `native_decide`, `implemented_by`, `extern`,
+`sorry` (also inside a longer name such as `mkSorry`), the `stop` tactic, `apply?`, `admit`, a
+declared axiom, `native_decide` and a `decide` that is given a config, `implemented_by`, `extern`,
 `unsafe`, `opaque`, a `debug.*` option, `skipKernelTC`, `addDecl`, `modifyEnv`, `run_cmd`, `#eval`
-and `initialize`, with their variants. Comments and string literals are not read, and
-`src/Challenge.lean` is left out. In the rest of the current tree the script finds none of these.
+and `initialize`, with their variants. It also fails a pull request that changes `lakefile.toml`,
+`lakefile.lean`, `lake-manifest.json` or `lean-toolchain`, or that puts a symbolic link or a
+submodule under `src/`: a library declared in the lakefile can live outside `src/`, and a link
+can point there. Comments and string literals are not read, except the `{...}` parts of an
+interpolated string, a name in guillemets is read as the name, and `src/Challenge.lean` is left
+out. In the rest of the current tree the script finds none of these.
 Three of them (`addDecl`, `modifyEnv`, `run_cmd`) are in the original files that the list above
 describes; those files are no longer in the tree.
 Like the scan above it is a text search. It does not see a goal that a `run_tac` block assigns
 directly, or a term that metaprogramming builds under another name, and it tells the `stop`
-tactic from a name called `stop` by where the word stands. It does not replace the axiom check.
+tactic from a name called `stop` by what stands around the word, so a name `stop` that is
+followed by another word is taken for the tactic. An interpolated string is known by `s!`, `m!`,
+`f!` or one of core's macros before it; a macro of the tree's own that takes one is not. It does
+not replace the axiom check.
 
 ## Statements
 

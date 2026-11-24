@@ -2,7 +2,8 @@ name: risky constructs
 
 # The full build passes when a proof uses `sorry` and when a pull request declares an axiom: the
 # first only warns, and the second compiles silently. This fails a pull request that adds one of
-# the constructs listed in scripts/risky-constructs.py to a Lean file under src/.
+# the constructs listed in scripts/risky-constructs.py to a Lean file under src/, or changes the
+# lakefile, the manifest or the toolchain file.
 #
 # Like challenge-files.yml, this runs the base branch's copy of the workflow, and the script it
 # runs is the base branch's too. The pull request's commits are fetched as git objects and read.
@@ -14,7 +15,9 @@ name: risky constructs
 
 on:
   pull_request_target:
-    types: [opened, synchronize, reopened]
+    # `edited` is there for a pull request that is given another base branch. Every edit runs
+    # the scan: a run that skipped its job would count as passed and would replace a failed one.
+    types: [opened, synchronize, reopened, edited]
   workflow_dispatch:
     inputs:
       pr_number:
@@ -26,13 +29,14 @@ permissions:
   contents: read
   pull-requests: read
 
+# A run started by hand has a group of its own, so that it does not cancel the pull request's run.
 concurrency:
-  group: risky-constructs-${{ github.event.pull_request.number || inputs.pr_number }}
+  group: risky-constructs-${{ github.event_name }}-${{ github.event.pull_request.number || inputs.pr_number }}
   cancel-in-progress: true
 
 jobs:
   scan:
-    name: No risky construct is added under src/
+    name: No risky construct is added and what is built is unchanged
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -46,9 +50,15 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
-          PR: ${{ github.event.pull_request.number || inputs.pr_number }}
+          PR: ${{ inputs.pr_number }}
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
         run: |
-          base=$(gh api "repos/$REPO/pulls/$PR" --jq .base.sha)
-          head=$(gh api "repos/$REPO/pulls/$PR" --jq .head.sha)
+          # A pull request's event names the commits it is about. Asking the API at run time
+          # could answer with an older head just after a push. Only a run started by hand asks.
+          if [ -z "$HEAD" ]; then
+            BASE=$(gh api "repos/$REPO/pulls/$PR" --jq .base.sha)
+            HEAD=$(gh api "repos/$REPO/pulls/$PR" --jq .head.sha)
+          fi
           python3 scripts/risky-constructs.py --annotate --work "$RUNNER_TEMP/pull" \
-            --remote "https://github.com/$REPO" --base "$base" --head "$head"
+            --remote "https://github.com/$REPO" --base "$BASE" --head "$HEAD"

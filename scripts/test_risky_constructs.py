@@ -85,38 +85,95 @@ class Reading(unittest.TestCase):
             "example : False := by\n  sorry; sorry\n": {"sorry": [2, 2]},
             "theorem t : 1 + 1 = 3 := by\n  stop\n  simp\n": {"stop": [2]},
             "theorem t : 1 + 1 = 3 := by stop simp\n": {"stop": [1]},
-            "example : 2 + 2 = 4 := by decide (config := { native := true })\n": {"native_decide": [1]},
+            "example : 2 + 2 = 4 := by decide (config := { native := true })\n": {"native_decide": [1, 1]},
+            "example : 2 + 2 = 4 := by decide (config := { native := Bool.true })\n": {"native_decide": [1, 1]},
+            "example : 2 + 2 = 4 := by decide (config := { native := !false })\n": {"native_decide": [1, 1]},
+            # No listed word, and the compiler is switched on all the same.
+            "example : 2 + 2 = 4 := by decide (config := ⟨false, true, true, false⟩)\n": {"native_decide": [1]},
+            "example : 2 + 2 = 4 := by\n  decide\n    (config := c)\n": {"native_decide": [2]},
+            "def c : Lean.Meta.Decide.Config := { native := true }\n": {"native_decide": [1]},
+            "example := Lean.reduceBool true\n": {"native_decide": [1]},
+            "example : p := by bv_check \"p.lrat\"\n": {"native_decide": [1]},
+            # Options and other items may stand before the config.
+            "example : 2 + 2 = 4 := by decide +revert (config := ⟨false, true, true, false⟩)\n": {"native_decide": [1]},
+            "example : 2 + 2 = 4 := by decide (zetaReduce := true) (config := c)\n": {"native_decide": [1]},
+            "example : 2 + 2 = 4 := by decide -zetaReduce (config := c)\n": {"native_decide": [1]},
+            "example := by simp (config := ⟨1⟩)\n": {"native_decide": [1]},
+            "theorem e (a b c : Nat) : a * b < c := by apply?\n": {"apply?": [1]},
+            "theorem e (a b c : Nat) : a * b < c := by\n  apply? using h\n": {"apply?": [2]},
+            "elab \"cheat\" : tactic => do Lean.Elab.admitGoal (← Lean.Elab.Tactic.getMainGoal)\n": {"admit": [1]},
+            "def s (t : Lean.Expr) := Lean.Meta.mkSorry t true\n": {"sorry": [1]},
+            "theorem sorry_free : True := trivial\n": {"sorry": [1]},
             "set_option\n  debug.skipKernelTC true in\nexample := 1\n": {"set_option debug": [1], "skipKernelTC": [2]},
         }
         for text, expected in cases.items():
             with self.subTest(text=text):
                 self.assertEqual(self.found(text), expected)
 
-    def test_the_stop_tactic_is_found_where_a_tactic_stands(self):
-        for line in ("  case inl h => stop simp", "  | zero => stop simp", "  next => stop", "  . stop",
-                     "  · stop simp", "  try stop simp", "  all_goals stop simp", "  first | stop simp | rfl",
+    def test_the_stop_tactic_is_found_wherever_tactics_follow_it(self):
+        # Compiled with Lean v4.37.0-rc1, each closing its goal with `sorryAx`: `stop simp` at the
+        # start of a line, in `by (...)`, in `by { ... }`, after `focus`, `classical`, `try`,
+        # `all_goals`, `;`, `=>` and in `first | ... | ...`. The other lines pin the same rule.
+        for line in ("  stop simp", "  exact (by (stop simp))", "  exact (by { stop simp })", "  focus stop simp",
+                     "  classical stop simp", "  case inl h => stop simp", "  | zero => stop simp", "  next => stop simp",
+                     "  . stop simp", "  .stop simp", "  · stop simp", "  try stop simp", "  all_goals stop simp",
+                     "  first | stop simp | rfl", "  first |stop simp | rfl", "  first | stop exact fun x => x | rfl",
                      "  simp <|> stop simp", "  if h : p then stop simp else rfl", "decreasing_by stop simp",
-                     "  simp; stop simp", "  simp <;> stop simp", "  stop"):
+                     "  simp; stop simp", "  simp <;> stop simp", "  skip;stop simp", "  stop (simp)", "  stop(simp)",
+                     "  stop · simp", "  stop . simp", "  stop $t", "  stop _root_.foo", "  stop {simp}", "  stop ⟨x⟩",
+                     "  stop [x]", "  `(tactic|stop simp)"):
             with self.subTest(line=line):
                 self.assertEqual(self.found(f"example : True := by\n{line}\n"), {"stop": [2]})
 
+    def test_the_stop_tactic_is_found_with_its_tactics_on_the_next_line(self):
+        # `stop` takes the tactics that follow it, on its line or below.
+        for line in ("  stop", "  · stop", "  . stop", "  simp; stop", "  next => stop", "  all_goals stop", "  try stop",
+                     "  simp <;> stop", "  exact (by stop", "  focus stop", "  first | stop", "  refine ⟨by stop",
+                     "  classical stop", "  repeat stop", "  exact by {stop"):
+            with self.subTest(line=line):
+                self.assertEqual(self.found(f"example : True := by\n{line}\n    simp\n"), {"stop": [2]})
+                self.assertEqual(self.found(f"example : True := by\n{line}\n\n  simp\n"), {"stop": [2]})
+        self.assertEqual(self.found("example : True := by stop\n  simp\n"), {"stop": [1]})
+        self.assertEqual(self.found("stop\nsimp\n"), {"stop": [1]})
+        self.assertEqual(self.found("example : True := by\r\n  stop\r\n  simp\r\n"), {"stop": [2]})
+        self.assertEqual(self.found("example : True := by\r\n  simp; stop\r\n  simp\r\n"), {"stop": [2]})
+
     def test_a_name_called_stop_is_not_found(self):
-        for line in ("  exact f (stop step : Nat)", "  exact (stop + 1)", "  exact (stop, start)", "  exact {stop}",
-                     "  exact (stop.le)", "  exact { stop with x := 1 }", "  exact g (stop' : Nat)",
-                     "    stop n", "  rw [hp.stop] at this", "  match x with | stop => 1", "  exact f stop",
-                     "  exact bystop", "  cases h with | stop h => exact h"):
+        for line in ("  exact (stop + 1)", "  exact (stop, start)", "  exact {stop}", "  exact (stop.le)",
+                     "  exact { stop with x := 1 }", "  exact g (stop' : Nat)", "  rw [hp.stop] at this",
+                     "  match x with | stop => 1", "  exact f stop", "  exact bystop", "  exact (stop : Nat)",
+                     "  exact h (stop := 1)", "  exact stop ≤ n", "  exact if stop then a else b", "  exact if c then stop else b",
+                     "  simp [h] at stop ⊢", "  exact fun stop => stop", "  rw [h] at stop", "  simpa using stop",
+                     "  exact x.stop", "  induction stop generalizing n", "  exact stop from h", "  exact le_of stop in h",
+                     "  exact foo stop where", "  cases stop with", "  exact stop at h", "  exact stop using h",
+                     "  cases h with | stop h => exact h"):
             with self.subTest(line=line):
                 self.assertEqual(self.found(f"example : True := by\n{line}\n"), {})
+        self.assertEqual(self.found("structure S where\n  stop : 1 = 1\n"), {})
+        # Last on its line where a tactic may begin, but nothing below it that it could take.
+        self.assertEqual(self.found("example : Nat → Nat :=\n    fun stop => stop\ntheorem t : True := trivial\n"), {})
+        # At the start of a line, `| stop h => ...` is an alternative, however far `stop` stands from the bar.
+        for line in ("  | stop h => exact h", "  |stop h => exact h", "  |     stop h => exact h", "  | stop h | start h => exact h"):
+            with self.subTest(line=line):
+                self.assertEqual(self.found(f"example : True := by\n  cases h with\n{line}\n"), {})
+
+    def test_a_name_called_stop_before_another_word_is_taken_for_the_tactic(self):
+        # A text search cannot tell these from `stop simp`. No file of the tree has one.
+        for line in ("  exact f (stop step : Nat)", "    stop n", "  exact g stop x", "  intro stop h", "  exact fun stop n => n",
+                     "  exact f «stop» x"):
+            with self.subTest(line=line):
+                self.assertEqual(self.found(f"example : True := by\n{line}\n"), {"stop": [2]})
 
     def test_a_comment_between_two_words_does_not_hide_a_construct(self):
         self.assertEqual(self.found("example : True := by /- c -/ stop simp\n"), {"stop": [1]})
         self.assertEqual(self.found("set_option /- c -/ debug.skipKernelTC true in\nexample := 1\n"),
                          {"set_option debug": [1], "skipKernelTC": [1]})
-        self.assertEqual(self.found("example : 2 + 2 = 4 := by decide (config := { native /- c -/ := true })\n"),
-                         {"native_decide": [1]})
+        self.assertEqual(self.found("example : 2 + 2 = 4 := by decide /- c -/ (config := { native /- c -/ := true })\n"),
+                         {"native_decide": [1, 1]})
 
     def test_names_that_only_contain_a_word_are_not_found(self):
-        for text in ("theorem sorry_free : True := trivial\n", "def unsafeCast := 1\n",
+        for text in ("def unsafeCast := 1\n", "example := by decide\n", "example := by simp (config := { decide := true })\n",
+                     "theorem admitted_pair : True := trivial\n", "example := by exact? \n", "example := by apply h?\n",
                      "theorem axiomatic : True := trivial\n", "example := by decide +kernel\n",
                      "set_option allowUnsafeReducibility true in\nexample := 1\n",
                      "def opaqueness := 1\n", "theorem admits_basis : True := trivial\n",
@@ -153,6 +210,58 @@ class Reading(unittest.TestCase):
         self.assertEqual(self.found('/-!/ " -/\naxiom hidden : False\n'), {"axiom": [2]})
         self.assertEqual(self.found("/- a /--/ b -/\naxiom after : False\n"), {"axiom": [2]})
         self.assertEqual(self.found("/--/ sorry -/\ntheorem t : True := trivial\n"), {})
+
+    def test_a_name_in_guillemets_is_one_token(self):
+        # Each of these compiles; read as plain text, the name would open a comment or a string.
+        self.assertEqual(self.found("def «/-» : Nat := 0\naxiom cheat : False\n"), {"axiom": [2]})
+        self.assertEqual(self.found("theorem «t2--» : 1 = 2 := sorry\n"), {"sorry": [1]})
+        self.assertEqual(self.found('def «a"» : Nat := 1\naxiom cheat : False\ndef b := "x"\n'), {"axiom": [2]})
+        # Lean reads the name on over a line break.
+        self.assertEqual(self.found("def «a\n/-» : Nat := 0\naxiom cheat : False\n-- -/\n"), {"axiom": [3]})
+        # A guillemet that is never closed starts no name.
+        self.assertEqual(self.found("example := x « y\naxiom cheat : False\n"), {"axiom": [2]})
+
+    def test_a_name_in_guillemets_is_the_same_name(self):
+        self.assertEqual(self.found("theorem t : False := «sorryAx» _ false\n"), {"sorry": [1]})
+        self.assertEqual(self.found("example := Lean.«ofReduceBool» a b c\n"), {"native_decide": [1]})
+        self.assertEqual(self.found("set_option «debug».«skipKernelTC» true in\nexample := 1\n"),
+                         {"set_option debug": [1], "skipKernelTC": [1]})
+        self.assertEqual(self.found("example : 2 + 2 = 4 := by decide («native» := true)\n"), {"native_decide": [1]})
+        self.assertEqual(self.found("example := do «modifyEnv» id\n"), {"modifyEnv or setEnv": [1]})
+        # The price: a name that is spelled like a keyword counts as the keyword.
+        self.assertEqual(self.found("def «sorry» : Nat := 0\n"), {"sorry": [1]})
+
+    def test_code_inside_an_interpolated_string_is_read(self):
+        self.assertEqual(self.found('theorem i : True := by\n  have _x := s!"{(sorry : Nat)}"\n  trivial\n'), {"sorry": [2]})
+        self.assertEqual(self.found('def a := m!"no {x} axiom here"\n'), {})
+        self.assertEqual(self.found('def a := f!"sorry {"sorry"} \\{sorry}"\n'), {})
+        self.assertEqual(self.found('def a := s!"{s!"{(sorry : Nat)}"}"\naxiom b : False\n'), {"sorry": [1], "axiom": [2]})
+        self.assertEqual(self.found('def a := s!"line one\n{(sorry : Nat)}"\naxiom b : False\n'), {"sorry": [2], "axiom": [3]})
+        # A macro of core that takes such a string, with or without a blank before it.
+        self.assertEqual(self.found('example := do throwError "{(sorry : Nat)}"\n'), {"sorry": [1]})
+        self.assertEqual(self.found('example := do throwError"{(sorry : Nat)}"\n'), {"sorry": [1]})
+        self.assertEqual(self.found('example := do trace[Meta.debug] "{(sorry : Nat)}"\n'), {"sorry": [1]})
+        self.assertEqual(self.found('example := do println! "{(sorry : Nat)}"\n'), {"sorry": [1]})
+        self.assertEqual(self.found('example := f 1s!"{(sorry : Nat)}"\n'), {"sorry": [1]})
+
+    def test_what_stands_in_the_braces_is_lexed_like_any_code(self):
+        # None of these may hide the axiom after the string.
+        for inner in ("'{'", "'}'", "'\\\"'", 'r"\\" ++ ""', "«{»", '"}"', "1 /- } -/ + 2", "{ x := 1 }.x", "{{}}"):
+            with self.subTest(inner=inner):
+                self.assertEqual(self.found(f'def a := s!"{{{inner}}}"\naxiom cheat : False\n'), {"axiom": [2]})
+        self.assertEqual(self.found("def a := s!\"{('}', (sorry : Nat)).2}\"\n"), {"sorry": [1]})
+        self.assertEqual(self.found('def a := s!"{1 /- } -/ + (sorry : Nat)}"\n'), {"sorry": [1]})
+        self.assertEqual(self.found('def a := s!"{1 -- }\n  + (sorry : Nat)}"\naxiom b : False\n'), {"sorry": [2], "axiom": [3]})
+
+    def test_a_plain_string_is_not_read_and_a_brace_in_it_opens_nothing(self):
+        self.assertEqual(self.found('def a := "{(sorry : Nat)}"\n'), {})
+        self.assertEqual(self.found('def a := "{"\naxiom cheat : False\n'), {"axiom": [2]})
+        self.assertEqual(self.found('def a := "}{"\naxiom cheat : False\ndef b := "sorry"\n'), {"axiom": [2]})
+        self.assertEqual(self.found('def a := xs[i] "{"\naxiom cheat : False\n'), {"axiom": [2]})
+
+    def test_strings_nested_too_deeply_stop_the_run(self):
+        with self.assertRaises(RuntimeError):
+            self.found("def a := " + 's!"{' * 40 + " sorry\n")
 
     def test_an_unterminated_comment_hides_the_rest(self):
         self.assertEqual(self.found("/- never closed\naxiom b : False\n"), {})
@@ -194,6 +303,46 @@ class Comparing(unittest.TestCase):
             "scripts/tool.py": "sorry = 1\n",
             "src/notes.txt": "sorry\n"}, delete=("src/Old.lean",))
         self.assertEqual(self.added(head), [])
+
+    def test_a_change_to_what_is_built_is_found(self):
+        self.repo.git("checkout", "--quiet", "main")
+        for name in ("lakefile.toml", "lake-manifest.json", "lean-toolchain"):
+            self.repo.write(name, "as it was\n")
+        self.repo.base = self.repo.commit("with a build configuration")
+        cases = {"added": ({"lakefile.lean": "import Lake\n"}, (), ["lakefile.lean"]),
+                 "modified": ({"lakefile.toml": 'name = "tree"\n[[lean_lib]]\nname = "Extra"\nsrcDir = "../extra"\n',
+                               "extra/Evil.lean": "axiom cheat : False\n", "docs/lakefile.toml": "elsewhere\n"}, (), ["lakefile.toml"]),
+                 "deleted": ({}, ("lean-toolchain", "lake-manifest.json"), ["lake-manifest.json", "lean-toolchain"])}
+        for name, (files, delete, expected) in cases.items():
+            with self.subTest(name):
+                head = self.repo.branch(name, files, delete=delete)
+                self.assertEqual(self.added(head), [(path, risky.CONFIGURED, [1]) for path in expected])
+
+    def test_a_link_under_src_is_found(self):
+        self.repo.git("checkout", "--quiet", "-b", "link", self.repo.base)
+        (self.repo.root / "src/A.lean").unlink()
+        (self.repo.root / "src/A.lean").symlink_to("../extra/A.lean")   # a file that becomes a link
+        (self.repo.root / "src/Dir").symlink_to("../extra")             # a new link to a directory
+        self.repo.write("extra/A.lean", "axiom cheat : False\n")
+        head = self.repo.commit("links")
+        self.assertEqual(self.added(head), [("src/A.lean", risky.LINKED, [1]), ("src/Dir", risky.LINKED, [1])])
+
+    def test_the_report_says_what_each_kind_of_finding_means(self):
+        with contextlib.redirect_stdout(io.StringIO()) as out:
+            self.assertEqual(risky.report([(b"lakefile.toml", risky.CONFIGURED, 0, [1]), (b"src/Dir", risky.LINKED, 0, [1])],
+                                          resume="token"), 1)
+        text = out.getvalue()
+        lines = text.splitlines()
+        self.assertEqual(lines[:2], ["lakefile.toml: a change to what is built", "src/Dir: a link under src/"])
+        self.assertIn("decide what is built", text)
+        self.assertIn("A link under src/ can point at Lean code", text)
+        self.assertNotIn("must not need these constructs", text)
+        self.assertEqual(lines[-2:], ["::error file=lakefile.toml,line=1::This pull request changes lakefile.toml, which decides what is built.",
+                                      "::error file=src/Dir,line=1::This pull request makes src/Dir a link."])
+        with contextlib.redirect_stdout(io.StringIO()) as out:
+            risky.report([(b"src/A.lean", "sorry", 0, [2])])
+        self.assertIn("must not need these constructs", out.getvalue())
+        self.assertNotIn("decide what is built", out.getvalue())
 
     def test_a_word_in_a_comment_passes(self):
         head = self.repo.branch("comment", {"src/A.lean": "/-- We admit no axiom here, sorry. -/\n" + CLEAN})

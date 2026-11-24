@@ -10,8 +10,13 @@ git objects and read. Nothing from the pull request is checked out or run.
 
 For every Lean file under `src/` that the pull request adds or changes, comments and string
 literals are removed and each construct is counted where the pull request branched off and at
-its head. A count that went up fails the check. `src/Challenge.lean` is left out: it states the
+its head. A count that went up fails the check. Of an interpolated string the `{...}` parts
+are code and are read, and a name in guillemets is read without them. `src/Challenge.lean` is left out: it states the
 theorems with `sorry`, and challenge-files.yml keeps it unchanged.
+
+A change to `lakefile.toml`, `lakefile.lean`, `lake-manifest.json` or `lean-toolchain` fails the
+check as well, and so does a symbolic link or a submodule under `src/`. A library declared in the
+lakefile can live outside `src/`, and a link can point there; this check does not read there.
 
 A text search is not a proof. It catches the accident. It does not catch a term that
 metaprogramming builds under another name; the axiom check in Comparator does.
@@ -31,27 +36,23 @@ SOURCE, LEAN = b"src/", b".lean"
 EXEMPT = {b"src/Challenge.lean"}
 # The constructs, as (name, pattern). They are the rows of verification/static-scan.txt for
 # which these patterns find nothing on main today (three of them, addDecl, modifyEnv and
-# run_cmd, had entries in the original files), and two more ways to write the first rows: the
-# `stop` tactic and `native := true`. Each pattern is matched against the text of a Lean file
-# with comments and string literals removed.
+# run_cmd, had entries in the original files), and more ways to write the first rows: the
+# `stop` tactic, `apply?`, and a `decide` that is given a config. Each pattern is matched
+# against the text that `code()` makes of a Lean file.
 #
-# `stop` closes the goal with `sorry`, and a field or a hypothesis may have the same name. So
-# it is only counted where a tactic stands: alone on its line, or right after `by`, `=>`, `;`,
-# `<;>`, a bullet, `try`, `all_goals`, `any_goals`, `then`, `else`, `<|>` or the `|` of `first`.
-# A `stop` followed by tactics at the start of a line is not seen.
-NOT_A_NAME = r"\b(?!')(?![ \t]*(?:=>|:|\.|,|\)|\]|\}|\||with\b))"
-STOP = (r"^[ \t]+stop[ \t]*$"
-        r"|(?:(?<![\w'.])(?:by|try|all_goals|any_goals|then|else)|decreasing_by|=>|;|<;>|·|^[ \t]*\.|<\|>)"
-        r"[ \t]+stop" + NOT_A_NAME +
-        # After `|` it is a tactic in `first | stop ... | ...`, and a pattern in `| stop h => ...`.
-        r"|\|[ \t]+stop" + NOT_A_NAME + r"(?![^|\n]*=>)")
+# `sorry` is found inside longer names too, in any case: `sorryAx`, `mkSorry`, `elabSorry`.
 CONSTRUCTS = (
-    ("sorry", r"\b(?:sorry|sorryAx)\b"),
-    ("stop", STOP),
-    ("admit", r"\badmit\b"),
+    ("sorry", r"(?i:sorry)"),
+    ("stop", None),  # found by StopTactic below
+    # `apply?` closes a goal it cannot solve with `sorry` and a warning.
+    ("apply?", r"\bapply\?"),
+    ("admit", r"\b(?:admit|admitGoal)\b"),
     ("axiom", r"\baxiom\b"),
+    # `native := <anything>`, and a `decide` that is given a config at all: the config can
+    # switch the compiler on without the word `native`, as `⟨false, true, true, false⟩` does.
     ("native_decide",
-     r"\b(?:native_decide|ofReduceBool|trustCompiler|bv_decide)\b|\+native\b|\bnative\s*:=\s*true\b"),
+     r"\b(?:native_decide|ofReduceBool|reduceBool|trustCompiler|bv_decide|bv_check)\b|\+native\b|\bnative\s*:="
+     r"|\bdecide\b(?:\s*[+-]\w+|\s*\((?!\s*config\b)[^()\n]*\))*\s*\(\s*config\b|\bconfig\s*:=\s*⟨"),
     ("implemented_by or extern", r"\b(?:implemented_by|extern)\b"),
     ("unsafe", r"\bunsafe\b"),
     ("opaque", r"\bopaque\b"),
@@ -62,12 +63,77 @@ CONSTRUCTS = (
     ("run_cmd, run_elab, run_meta or #eval", r"\b(?:run_cmd|run_elab|run_meta)\b|#eval\b"),
     ("initialize", r"\b(?:initialize|builtin_initialize)\b"),
 )
-PATTERNS = tuple((name, re.compile(pattern, re.MULTILINE)) for name, pattern in CONSTRUCTS)
+
+
+class StopTactic:
+    """Finds the `stop` tactic, which closes the goal with `sorry`.
+
+    A field or a hypothesis may be called `stop` too, so the word counts by what stands around
+    it. It is the tactic when it is alone on its line; when it is last on its line, a tactic may
+    begin where it stands (after `by`, `=>`, `;`, a bullet, an opening bracket and the like) and
+    the next line is indented at least as far, since `stop` takes the tactics below it; and
+    when tactics follow it on its line: a word after a blank, an opening bracket, a bullet. That
+    takes a name `stop` that is followed by another word for the tactic. It is a name after the
+    dot of `hp.stop`, before `:`, `,`, a closing bracket or an operator, before `with`, `then`,
+    `at` and such words, and in an alternative `| stop h => ...` at the start of a line or
+    after `with`.
+    """
+    WORD = re.compile(r"(?<![\w'])stop(?![\w'])")
+    # The end of a line's text after which a tactic may begin.
+    BEFORE = re.compile(r"(?:(?<![\w'.])(?:by|try|all_goals|any_goals|focus|classical|then|else|repeat|first)|decreasing_by"
+                        r"|=>|;|<;>|·|<\|>|\||\(|\{)$")
+    NO_TACTIC = ("with", "then", "else", "at", "in", "using", "from", "generalizing", "where")
+
+    INDENTED = re.compile(r"\n([ \t]*)\S")
+
+    def finditer(self, text):
+        for match in self.WORD.finditer(text):
+            start = text.rfind("\n", 0, match.start()) + 1
+            end = text.find("\n", match.end())
+            end = len(text) if end < 0 else end
+            below = self.INDENTED.search(text, end)
+            if self.is_tactic(text[start:match.start()], text[match.end():end], below.group(1) if below else None):
+                yield match
+
+    def is_tactic(self, before, after, below):
+        """Whether the word is the tactic.
+
+        `before` and `after` are the text around it on its line, `below` the indentation of the
+        next line that is not empty, or None when there is none.
+        """
+        lead, rest = before.rstrip(" \t"), after.lstrip(" \t")
+        bullet = lead.strip() == "."  # a line that begins with `.` begins with a bullet
+        if lead.endswith(".") and not bullet:
+            return False
+        if not rest:
+            if not lead.strip():
+                return True
+            indentation = len(before) - len(before.lstrip(" \t"))
+            return (bullet or self.BEFORE.search(lead) is not None) and below is not None and len(below) >= indentation
+        if rest[0] in "({·⟨[" or rest == "." or rest.startswith((". ", ".\t")) and len(rest) < len(after):
+            return True
+        if len(rest) == len(after) or not (rest[0].isalpha() or rest[0] in "_$"):
+            return False
+        if re.match(r"[\w']*", rest).group() in self.NO_TACTIC:
+            return False
+        # `| stop h => ...` at the start of a line or after `with` is an alternative of a `match`
+        # or of `cases ... with`. The `=>` may stand after further patterns: `| stop h | start h => ...`.
+        alternative = lead.strip() == "|" or re.search(r"(?<![\w'])with[ \t]*\|$", lead) is not None
+        return not (alternative and "=>" in rest)
+
+
+PATTERNS = tuple((name, re.compile(pattern, re.MULTILINE) if pattern else StopTactic()) for name, pattern in CONSTRUCTS)
 # A word that every pattern needs. Nearly every file has none of them and is not read more
 # closely. This looks at the raw text, comments included, so it must not ask for more than a word.
-ANY = re.compile(r"sorry|stop|admit|axiom|native|ofReduceBool|trustCompiler|bv_decide|implemented_by|extern|unsafe"
-                 r"|opaque|debug|skipKernelTC|addDecl|addAndCompile|modifyEnv|setEnv|run_cmd|run_elab|run_meta"
-                 r"|#eval|initialize")
+ANY = re.compile(r"(?i:sorry)|stop|apply\?|admit|axiom|native|config|[rR]educeBool|trustCompiler|bv_decide|bv_check|implemented_by"
+                 r"|extern|unsafe|opaque|debug|skipKernelTC|addDecl|addAndCompile|modifyEnv|setEnv|run_cmd|run_elab"
+                 r"|run_meta|#eval|initialize")
+# Files outside src/ that decide what is built, and with which Lean. A library added to the
+# lakefile can live anywhere, so a change to one of them is reported like a construct.
+CONFIGURATION = (b"lakefile.toml", b"lakefile.lean", b"lake-manifest.json", b"lean-toolchain")
+CONFIGURED = "a change to what is built"
+# A symbolic link or a submodule under src/. Git has the link's target path, not what it points at.
+LINKED = "a link under src/"
 # Files read from git in one process.
 BATCH = 2000
 # Most lines listed for one construct in one file.
@@ -77,8 +143,16 @@ LISTED = 5
 CHARACTER = re.compile(r"'(?:\\(?:x[0-9a-fA-F]{2}|u[0-9a-fA-F]{4}|.)|[^\\'\n])'")
 # The opening of a raw string: r"..." or r#"..."#.
 RAW = re.compile(r'r(#*)"')
-# Where a comment, a string or a character literal may begin.
-OPENING = re.compile(r"""--|/-|"|'|r#*\"""")
+# Where a comment, a string, a character literal or a name in guillemets may begin.
+OPENING = re.compile(r"""--|/-|"|'|r#*\"|«""")
+# The same, for code inside the braces of an interpolated string: there braces count too.
+OPENING_IN_BRACES = re.compile(r"""--|/-|"|'|r#*\"|«|\{|\}""")
+# What stands right before a string makes it an interpolated one: `s!`, `m!`, `f!`, and the
+# macros of core that take such a string. A macro of the tree's own that does is not known here.
+INTERPOLATING = re.compile(r"(?:[smf]!|\b(?:throwError|logInfo|logWarning|logError|dbg_trace)[ \t]*"
+                           r"|\b(?:println|print|eprintln|eprint|panic)![ \t]*|\btrace\[[^\]\n]*\][ \t]*)$")
+# Interpolated strings inside interpolated strings, at most this deep. Beyond it the run fails.
+DEEPEST = 30
 # The next opening or closing of a block comment. Block comments nest.
 NESTING = re.compile(r"/-|-/")
 # A string literal with its escapes.
@@ -104,28 +178,67 @@ def git(repo, *args, data=None, ok=(0,), config=()):
 
 
 def code(text):
-    """`text` with comments and string literals blanked out. Line breaks stay where they are."""
-    out, at, end = [], 0, len(text)
+    """The code of a Lean file: comments, string literals and character literals blanked out.
+
+    Line breaks stay where they are. Two things are code although they do not look like it. The
+    `{...}` parts of an interpolated string are read. A name in guillemets is the name without
+    them, so `«sorryAx»` is `sorryAx`, and whatever stands in the name opens no comment or string.
+    """
+    out = []
+    lex(text, 0, out, 0)
+    return "".join(out)
+
+
+def blanked(text):
+    return "".join(char if char == "\n" else " " for char in text)
+
+
+def lex(text, at, out, level):
+    """Append the code of `text` from `at` on to `out`. Returns where it stopped.
+
+    With `level` above 0 this is code inside the braces of an interpolated string, and it stops
+    after the `}` that closes them.
+    """
+    end, depth, opener = len(text), 0, OPENING_IN_BRACES if level else OPENING
     while at < end:
-        opening = OPENING.search(text, at)
+        opening = opener.search(text, at)
         if not opening:
             out.append(text[at:])
-            break
+            return end
         start = opening.start()
         out.append(text[at:start])
+        if text[start] in "{}":
+            out.append(text[start])
+            at = start + 1
+            if text[start] == "{":
+                depth += 1
+            elif depth == 0:
+                return at
+            else:
+                depth -= 1
+            continue
         if text.startswith("--", start):
             stop = text.find("\n", start)
             stop = end if stop < 0 else stop
         elif text.startswith("/-", start):
             # `/--` opens a comment as a whole: after `/--/` the comment is still open.
-            depth, stop = 1, start + (3 if text.startswith("/--", start) else 2)
-            while depth:
+            depth_of_comment, stop = 1, start + (3 if text.startswith("/--", start) else 2)
+            while depth_of_comment:
                 nested = NESTING.search(text, stop)
                 if not nested:
                     stop = end
                     break
-                depth += 1 if nested.group() == "/-" else -1
+                depth_of_comment += 1 if nested.group() == "/-" else -1
                 stop = nested.end()
+        elif text[start] == "«":
+            # Lean reads on to the next `»`, over line breaks too. Without one this is no name.
+            stop = text.find("»", start)
+            out.append("«" if stop < 0 else text[start + 1:stop])
+            at = start + 1 if stop < 0 else stop + 1
+            continue
+        elif text[start] == '"' and INTERPOLATING.search(text, max(start - 60, 0), start):
+            at = interpolated(text, start, out, level)
+            continue
         elif text[start] == '"':
             closing = QUOTE.match(text, start)
             stop = closing.end() if closing else end
@@ -139,9 +252,36 @@ def code(text):
             out.append(text[start])
             at = start + 1
             continue
-        out.append("".join(char if char == "\n" else " " for char in text[start:stop]))
+        out.append(blanked(text[start:stop]))
         at = stop
-    return "".join(out)
+    return end
+
+
+def interpolated(text, start, out, level):
+    """Append the interpolated string that opens at `start` to `out`: blanks, and the code in its braces.
+
+    What stands in the braces is Lean code: `s!"{(sorry : Nat)}"` holds a `sorry`. Returns where
+    the string ends.
+    """
+    if level >= DEEPEST:
+        raise RuntimeError("interpolated strings are nested too deeply to read")
+    out.append(" ")
+    at, end = start + 1, len(text)
+    while at < end:
+        char = text[at]
+        if char == "\\":
+            out.append(blanked(text[at:at + 2]))
+            at += 2
+        elif char == '"':
+            out.append(" ")
+            return at + 1
+        elif char == "{":
+            out.append("{")
+            at = lex(text, at + 1, out, level + 1)
+        else:
+            out.append(blanked(char))
+            at += 1
+    return end
 
 
 def name_before(text, at):
@@ -155,7 +295,8 @@ def scan(contents):
     text = contents.decode("utf-8", "replace")
     if not ANY.search(text):
         return found
-    text = code(text)
+    # Lean reads a line that ends in CR LF as one that ends in LF.
+    text = code(text.replace("\r\n", "\n"))
     breaks = [at for at, char in enumerate(text) if char == "\n"]
     for name, pattern in PATTERNS:
         # A match that runs over a line break is counted where it begins.
@@ -171,7 +312,7 @@ def scan(contents):
 
 def lean_files(repo, fork, head):
     """Lean files under src/ that `head` adds or changes relative to `fork`. Reads trees only."""
-    _, out = git(repo, "diff", "--name-only", "--no-renames", "--diff-filter=AM", "-z", fork, head)
+    _, out = git(repo, "diff", "--name-only", "--no-renames", "--diff-filter=AMT", "-z", fork, head)
     return sorted(path for path in out.split(b"\0")
                   if path.startswith(SOURCE) and path.endswith(LEAN) and path not in EXEMPT)
 
@@ -255,6 +396,14 @@ def added(repo, fork, head, *, fetch=False):
             earlier = len(before.get(path, {}).get(name, ()))
             if len(lines) > earlier:
                 findings.append((path, name, earlier, lines))
+    _, out = git(repo, "diff", "--name-only", "--no-renames", "-z", fork, head, "--", *(name.decode() for name in CONFIGURATION))
+    findings.extend((path, CONFIGURED, 0, [1]) for path in sorted(out.split(b"\0")) if path)
+    # In the raw form each entry is its two modes, two ids and a letter, and then its path.
+    _, out = git(repo, "diff", "--raw", "--no-renames", "-z", fork, head, "--", SOURCE.decode())
+    fields = out.split(b"\0")
+    for meta, path in zip(fields[0::2], fields[1::2]):
+        if meta.split()[1] in (b"120000", b"160000"):
+            findings.append((path, LINKED, 0, [1]))
     return findings
 
 
@@ -290,19 +439,31 @@ def report(findings, *, resume=None):
     file names come from the pull request.
     """
     for path, name, earlier, lines in findings:
+        if name in (CONFIGURED, LINKED):
+            print(f"{show(path)}: {name}")
+            continue
         listed = ", ".join(str(line) for line in lines[:LISTED]) + (", ..." if len(lines) > LISTED else "")
         was = f" (this file had {earlier} before)" if earlier else ""
         print(f"{show(path)}: {name}: line {listed}{was}")
+    kinds = {name if name in (CONFIGURED, LINKED) else "construct" for _, name, _, _ in findings}
     if findings:
         print()
+    if "construct" in kinds:
         print("The proof must not need these constructs (verification/NOTES.md, Static scan).")
         print("A maintainer who means to allow one has to say so and change scripts/risky-constructs.py.")
-    else:
+    if CONFIGURED in kinds:
+        print("The lakefile, the manifest and the toolchain file decide what is built. A library declared")
+        print("there can hold Lean code outside src/, which this check does not read. A maintainer has to look.")
+    if LINKED in kinds:
+        print("A link under src/ can point at Lean code that this check does not read.")
+    if not findings:
         print("No risky construct was added.")
     if resume:
         print(f"::{resume}::")
         for path, name, _, lines in findings:
-            said = escaped(f"This pull request adds `{name}` to {show(path)}.")
+            said = escaped(f"This pull request changes {show(path)}, which decides what is built." if name == CONFIGURED
+                           else f"This pull request makes {show(path)} a link." if name == LINKED
+                           else f"This pull request adds `{name}` to {show(path)}.")
             print(f"::error file={escaped(show(path), properties=True)},line={lines[0]}::{said}")
     return 1 if findings else 0
 

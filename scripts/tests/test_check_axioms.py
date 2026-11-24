@@ -11,7 +11,7 @@ from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
 
-SCRIPT = Path(__file__).with_name("check-axioms.py")
+SCRIPT = Path(__file__).resolve().parents[1] / "check-axioms.py"
 spec = importlib.util.spec_from_file_location("check_axioms", SCRIPT)
 check = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(check)

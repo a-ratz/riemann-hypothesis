@@ -92,6 +92,16 @@ independent kernels.
 
 A text search is not a proof. The axiom check and kernel replay in Comparator are.
 
+**After a build.** [`scripts/check-axioms.py`](../scripts/check-axioms.py) asks Lean which axioms
+the theorems named in `comparator.json` depend on, and ends with 1 when one of them does not
+exist, is no theorem, or depends on an axiom outside `permitted_axioms`. A `sorry` anywhere below
+a theorem shows up as `sorryAx`. After `scripts/run-complete-build.py` it takes that build's map,
+log and receipt, makes the receipt check that staging makes, and reads `comparator.json` from the
+commit; with `--unbound` it runs on any tree whose solution module is built and says in its
+receipt that no completed build stands behind it. It reads the axioms that the build recorded in
+the solution module's artifact and replays nothing, so it finds a `sorry` or an axiom that was
+left in, and it is no defence against a tree written to deceive it. That is Comparator's part.
+
 ## Statements
 
 `Main.lean` proves `riemannHypothesis` as `Formalism.VW.rh_of_every allChi`, where `allChi` says

@@ -47,13 +47,14 @@ SOURCE, LEAN = b"src/", b".lean"
 # States the theorems with `sorry`. challenge-files.yml keeps it unchanged.
 EXEMPT = {b"src/Challenge.lean"}
 # No name character follows. Where one does, Lean reads a longer name: `stopping`, `admits`,
-# `axioms`, `external`. What stands before a word is not looked at, because Lean does not
-# look either: it reads `2axiom cheat : False` as a number and an axiom.
+# `axioms`, `external`, `impossible_case`. What stands before a word is not looked at, because
+# Lean does not look either: it reads `2axiom cheat : False` as a number and an axiom.
 END = r"(?![A-Za-z0-9_])"
 # The words, as (name, pattern). The name is what a report says.
 #
 # sorry          in any case and inside any name: `sorryAx`, `mkSorry`, `warn.sorry`
-# stop, admit    tactics that close a goal with `sorry`, as `apply?` and `plausible` do
+# stop, admit    tactics that close a goal with `sorry`, as `apply?`, `grind?`, `impossible` and
+#                `plausible` do
 # native         `native_decide`, `+native`, `native := true`; after a letter the lower-case
 #                word is passed over, as in `alternative`
 # decide-config  a `decide` with a config on its line, and `config := ⟨`: both can switch the
@@ -67,6 +68,8 @@ CONSTRUCTS = (
     ("admit", "admit" + END),
     ("admitGoal", "admitGoal"),
     ("apply?", r"apply\?"),
+    ("grind?", r"grind\?"),
+    ("impossible", "impossible" + END),
     ("plausible", "plausible"),
     ("axiom", "axiom" + END),
     ("elabAxiom", "elabAxiom"),

@@ -95,15 +95,15 @@ A text search is not a proof. The axiom check and kernel replay in Comparator ar
 **Pull requests.** `risky-constructs.yml` runs
 [`scripts/risky-constructs.py`](../scripts/risky-constructs.py) on every pull request. It fails a
 pull request that adds, to a Lean file under `src/`, a line with one of the words in the script's
-list: `sorry`, `stop`, `admit`, `apply?`, `plausible`, `axiom`, `native`, a `decide` with a config
-on its line, `implemented_by`, `extern`, `unsafe`, `opaque`, `debug`, `addDecl`, `modifyEnv`,
-`run_cmd`, `#eval`, `initialize`, and their variants. It is a plain search. The whole text of
-each added or changed file is read, comments and strings included, and a word counts wherever its
-letters stand, also inside a longer name (`mkSorry`, `hstop`, `unsafeCast`). Only for `stop`,
-`admit`, `axiom` and `extern` the name must not go on behind the word (`admits`, `axioms`), and
-the lower-case `native` is passed over after a letter (`alternative`). So a word in a comment
-fails the check too. A line is reported unless the file had the same line, apart from blanks,
-where the pull request branched off, or the line stands in
+list: `sorry`, `stop`, `admit`, `apply?`, `grind?`, `impossible`, `plausible`, `axiom`, `native`, a
+`decide` with a config on its line, `implemented_by`, `extern`, `unsafe`, `opaque`, `debug`,
+`addDecl`, `modifyEnv`, `run_cmd`, `#eval`, `initialize`, and their variants. It is a plain search.
+The whole text of each added or changed file is read, comments and strings included, and a word
+counts wherever its letters stand, also inside a longer name (`mkSorry`, `hstop`, `unsafeCast`).
+Only for `stop`, `admit`, `impossible`, `axiom` and `extern` the name must not go on behind the
+word (`admits`, `axioms`), and the lower-case `native` is passed over after a letter
+(`alternative`). So a word in a comment fails the check too. A line is reported unless the file had
+the same line, apart from blanks, where the pull request branched off, or the line stands in
 [`scripts/risky-constructs-allowed.txt`](../scripts/risky-constructs-allowed.txt) on the base
 branch. A symbolic link or a submodule under `src/` is reported as well. `src/Challenge.lean` is
 left out. In the rest of the tree at `ecc801f3`, 62,158 files, the words stand only at the end of

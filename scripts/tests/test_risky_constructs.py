@@ -75,6 +75,8 @@ class Reading(unittest.TestCase):
             "admit": "theorem t : False := by\n  admit\n",
             "admitGoal": "elab \"cheat\" : tactic => do\n  Lean.Elab.admitGoal (← Lean.Elab.Tactic.getMainGoal)\n",
             "apply?": "theorem t : False := by\n  apply?\n",
+            "grind?": "theorem t (p : Prop) : p := by\n  grind?\n",
+            "impossible": "theorem t : 2 + 2 = 5 := by\n  impossible by decide\n",
             "plausible": "theorem t (a b : Nat) : a + b = b + a := by\n  plausible\n",
             "axiom": "\naxiom cheat : False\n",
             "elabAxiom": "elab \"cheat\" : command => do\n  Lean.Elab.Command.elabAxiom {} stx\n",
@@ -103,7 +105,7 @@ class Reading(unittest.TestCase):
             with self.subTest(name):
                 self.assertEqual(scan(text).get(name), [2])
         # A word is reported under its own name only.
-        for name in ("sorry", "stop", "admit", "axiom", "elabAxiom", "axiomDecl", "plausible", "extern", "opaque", "initialize", "#eval"):
+        for name in ("sorry", "stop", "admit", "axiom", "elabAxiom", "axiomDecl", "plausible", "grind?", "impossible", "extern", "opaque", "initialize", "#eval"):
             self.assertEqual(list(scan(cases[name])), [name])
 
     def test_a_word_in_a_comment_or_a_string_is_found_too(self):
@@ -129,13 +131,17 @@ class Reading(unittest.TestCase):
                            ("Lean.Parser.Tactic.nativeDecide", "native"), ("decide +native", "native"),
                            ("{ c with native := true }", "native"), ("+«native»", "native"), ("incl_native", "native"),
                            ("Lean.Meta.nativeEqTrue", "native"), ("builtin_initialize", "initialize"), ("unsafeCast", "unsafe"),
-                           ("unsafe_x", "unsafe"), ("opaquely", "opaque"), ("debugging", "debug"), (".axiomDecl", "axiomDecl")):
+                           ("unsafe_x", "unsafe"), ("opaquely", "opaque"), ("debugging", "debug"), (".axiomDecl", "axiomDecl"), ("first | grind? | rfl", "grind?"),
+                           ("it is impossible.", "impossible"), ("h.impossible", "impossible"), ("(impossible by simp)", "impossible"),
+                           ("have himpossible := h", "impossible"), ("impossible'", "impossible"), ("hgrind?", "grind?"),
+                           ("grind?x", "grind?"), ("grind? [foo]", "grind?"), ("readmit", "admit"), ("xapply?", "apply?"),
+                           ("apply?x", "apply?"), ("implausible", "plausible"), ("plausible_search", "plausible")):
             with self.subTest(text=text):
                 self.assertIn(name, scan(text))
 
     def test_a_longer_name_that_goes_on_after_the_word_is_another_name(self):
         text = ("stopping stops stop_at stop1 isStoppingTime\nadmits admitted admit_x AdmitsLimit\naxioms axiomatic axiomOfChoice\n"
-                "external externalProduct\nhint have hint : P\nalternative Alternative coarse_degree_alternative\n"
+                "external externalProduct\nhint have hint : P\nimpossible_case impossibleCase impossible1\ngrind grind => simp\nalternative Alternative coarse_degree_alternative\n"
                 "config := { decide := true }\n")
         self.assertEqual(scan(text), {})
 
